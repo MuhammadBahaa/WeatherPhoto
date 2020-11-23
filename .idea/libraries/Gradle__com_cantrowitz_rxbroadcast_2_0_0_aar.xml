@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.cantrowitz:rxbroadcast:2.0.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/10f1769919b4b570ca4a3d428c9de3b7/jetified-rxbroadcast-2.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/10f1769919b4b570ca4a3d428c9de3b7/jetified-rxbroadcast-2.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/10f1769919b4b570ca4a3d428c9de3b7/jetified-rxbroadcast-2.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cantrowitz/rxbroadcast/2.0.0/291deaa6d0703d69b8a9c2ed2274b752a6643fc6/rxbroadcast-2.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cantrowitz/rxbroadcast/2.0.0/c4c090c8f86fd17631ea716e23bbefa42304d97c/rxbroadcast-2.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
