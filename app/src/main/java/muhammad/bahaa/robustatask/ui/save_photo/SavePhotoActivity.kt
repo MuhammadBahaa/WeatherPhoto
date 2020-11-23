@@ -9,7 +9,6 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
-import com.google.android.gms.location.FusedLocationProviderClient
 import muhammad.bahaa.robustatask.R
 import muhammad.bahaa.robustatask.databinding.ActivitySavePhotoBinding
 import muhammad.bahaa.robustatask.ui.base.BaseActivity
@@ -25,7 +24,6 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
     override val rootView: Int
         get() = R.layout.activity_save_photo
     override val vMType: Class<SavePhotoViewModel> = SavePhotoViewModel::class.java
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun attachViewModelToView() {
@@ -58,6 +56,7 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
     private fun saveImageToStorage() {
         val savedImageUri =
             BitmapUtils.saveImageUri(convertToBitmap(viewDataBinding.container), this)
+        viewModel.saveImageToStorage(savedImageUri.toString())
         finish()
     }
 

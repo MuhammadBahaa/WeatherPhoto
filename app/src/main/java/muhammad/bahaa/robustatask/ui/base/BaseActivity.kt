@@ -42,7 +42,6 @@ abstract class BaseActivity<VM : BaseViewModel, B : ViewDataBinding> : AppCompat
         super.onCreate(savedInstanceState)
         attachViewModelToView()
         listenForToasts()
-        listenForNetworkChanges()
         listenForTermination()
     }
 
@@ -67,33 +66,6 @@ abstract class BaseActivity<VM : BaseViewModel, B : ViewDataBinding> : AppCompat
 
     fun showMessageAsToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private fun listenForNetworkChanges() {
-        val dis = fromLocalBroadcast(this, IntentFilter().apply {
-            addAction(ACTION_CHANGE_NETWORK_STATE)
-        }).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                val state = it.getBooleanExtra(EXTRA_NETWORK_IS_CONNECTED, false)
-
-                if (firstConnectionNotification && state) {
-                    firstConnectionNotification = false
-                    return@subscribe
-                }
-
-                if (state.not())
-                    notifyNetworkDisconnection()
-                else {
-                    notifyNetworkConnection()
-                    viewModel.onNetworkConnection()
-                }
-            }, {
-                notifyNetworkDisconnection()
-            })
-
-        compositeDisposable.add(dis)
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

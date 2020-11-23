@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import muhammad.bahaa.robustatask.R
 import muhammad.bahaa.robustatask.databinding.ActivityHomeBinding
 import muhammad.bahaa.robustatask.ui.base.BaseActivity
@@ -26,6 +28,18 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         initializeDataBindingVariables()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onViewResume()
+    }
+
+    private fun initializeAdapter(images: List<String>){
+        val recyclerView = viewDataBinding.recyclerViewHistory
+        recyclerView.adapter = HomeAdapter(images.toMutableList())
+        recyclerView.layoutManager =
+          GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+    }
+
     private fun initializeDataBindingVariables() {
         viewDataBinding.homeViewModel = viewModel
         viewDataBinding.lifecycleOwner = this
@@ -37,7 +51,13 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
             imageFile = fileToStoreCameraImg
             openCamera(imageFile, REQUEST_CAMERA)
         }
+
+        val photosListObserver = Observer<List<String>> {
+            initializeAdapter(it)
+        }
+
         viewModel.takePhotoEvent.observe(this, openCameraObserver)
+        viewModel.photosList.observe(this, photosListObserver)
     }
 
 
