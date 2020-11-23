@@ -5,21 +5,22 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.widget.LinearLayout
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import com.google.android.gms.location.FusedLocationProviderClient
 import muhammad.bahaa.robustatask.R
-import muhammad.bahaa.robustatask.data.models.WeatherResponse
 import muhammad.bahaa.robustatask.databinding.ActivitySavePhotoBinding
 import muhammad.bahaa.robustatask.ui.base.BaseActivity
+import muhammad.bahaa.robustatask.utils.BitmapUtils
 import muhammad.bahaa.robustatask.utils.INTENT_KEY_IMAGE_URI
 import muhammad.bahaa.robustatask.utils.REQUEST_STORAGE
 import muhammad.bahaa.robustatask.utils.checkLocationRequestPermissionState
 
 
-class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBinding>(), LocationListener {
+class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBinding>(),
+    LocationListener {
 
     override val rootView: Int
         get() = R.layout.activity_save_photo
@@ -55,14 +56,16 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
     }
 
     private fun saveImageToStorage() {
+        val savedImageUri =
+            BitmapUtils.saveImageUri(convertToBitmap(viewDataBinding.container), this)
         finish()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun checkRequestPermissionState() {
         when (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )) {
             PackageManager.PERMISSION_DENIED -> {
                 requestStoragePermission()
@@ -76,8 +79,8 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
     @RequiresApi(Build.VERSION_CODES.M)
     private fun requestStoragePermission() {
         requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_STORAGE
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            REQUEST_STORAGE
         )
     }
 
@@ -85,7 +88,7 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
         viewModel.getWeatherData(lat, lon)
     }
 
-    private fun convertToBitmap(layout: LinearLayout): Bitmap? {
+    private fun convertToBitmap(layout: View): Bitmap? {
         var map: Bitmap?
         layout.isDrawingCacheEnabled = true
         layout.buildDrawingCache()
