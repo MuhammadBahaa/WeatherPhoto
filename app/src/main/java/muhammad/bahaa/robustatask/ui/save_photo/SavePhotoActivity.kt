@@ -2,21 +2,22 @@ package muhammad.bahaa.robustatask.ui.save_photo
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.util.Log
+import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import muhammad.bahaa.robustatask.R
+import muhammad.bahaa.robustatask.data.models.WeatherResponse
 import muhammad.bahaa.robustatask.databinding.ActivitySavePhotoBinding
 import muhammad.bahaa.robustatask.ui.base.BaseActivity
 import muhammad.bahaa.robustatask.utils.INTENT_KEY_IMAGE_URI
 import muhammad.bahaa.robustatask.utils.REQUEST_STORAGE
 import muhammad.bahaa.robustatask.utils.checkLocationRequestPermissionState
+
 
 class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBinding>(), LocationListener {
 
@@ -44,6 +45,7 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
             checkRequestPermissionState()
         }
         viewModel.savePhotoEvent.observe(this, savePhotoObserver)
+
     }
 
     private fun displayCapturedImage() {
@@ -59,8 +61,8 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
     @RequiresApi(Build.VERSION_CODES.M)
     fun checkRequestPermissionState() {
         when (ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         )) {
             PackageManager.PERMISSION_DENIED -> {
                 requestStoragePermission()
@@ -74,13 +76,20 @@ class SavePhotoActivity : BaseActivity<SavePhotoViewModel, ActivitySavePhotoBind
     @RequiresApi(Build.VERSION_CODES.M)
     private fun requestStoragePermission() {
         requestPermissions(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            REQUEST_STORAGE
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_STORAGE
         )
     }
 
     override fun onLocationFetched(lat: String, lon: String) {
+        viewModel.getWeatherData(lat, lon)
+    }
 
+    private fun convertToBitmap(layout: LinearLayout): Bitmap? {
+        var map: Bitmap?
+        layout.isDrawingCacheEnabled = true
+        layout.buildDrawingCache()
+        return layout.drawingCache.also { map = it }
     }
 
 }
