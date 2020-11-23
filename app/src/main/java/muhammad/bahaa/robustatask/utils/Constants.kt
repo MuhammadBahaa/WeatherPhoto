@@ -2,6 +2,7 @@ package muhammad.bahaa.robustatask.utils
 
 const val REQUEST_CAMERA: Int = 100
 const val REQUEST_STORAGE: Int = 200
+const val REQUEST_LOCATION: Int = 300
 const val APP_NETWORK_ERROR = 1000
 
 const val INTENT_KEY_IMAGE_URI = "photo_uri"
