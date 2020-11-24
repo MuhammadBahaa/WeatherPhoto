@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
         <variable
             name="photoViewModel"
             type="muhammad.bahaa.robustatask.ui.photo_preview.PhotoViewModel" />
@@ -38,9 +38,9 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:text="@{photoViewModel.weatherResponse.cityName}"
-                android:visibility="@{photoViewModel.isSaveModeEnable ? View.VISIBLE : View.GONE}"
                 android:textColor="#0E0E0E"
                 android:textSize="30sp"
+                android:visibility="@{photoViewModel.isSaveModeEnable ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -51,10 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@{@string/temperature(photoViewModel.weatherResponse.data.temp)}"
-                android:visibility="@{photoViewModel.isSaveModeEnable ? View.VISIBLE : View.GONE}"
                 android:textColor="#0E0E0E"
                 android:textColorHighlight="#D3D3D3"
                 android:textSize="24sp"
+                android:visibility="@{photoViewModel.isSaveModeEnable ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="@+id/cityNameTextView"
                 app:layout_constraintStart_toStartOf="@+id/cityNameTextView"
                 app:layout_constraintTop_toBottomOf="@+id/cityNameTextView" />
@@ -68,8 +68,8 @@
             android:layout_height="50dp"
             android:layout_margin="50dp"
             android:onClick="@{()->photoViewModel.onSavePhotoButtonClicked()}"
-            android:visibility="@{photoViewModel.isSaveModeEnable ? View.VISIBLE : View.GONE}"
             android:text="@string/save_photo"
+            android:visibility="@{photoViewModel.isSaveModeEnable ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -80,8 +80,8 @@
             android:layout_height="50dp"
             android:layout_margin="50dp"
             android:onClick="@{()->photoViewModel.onSharePhotoButtonClicked()}"
-            android:visibility="@{photoViewModel.isSaveModeEnable ? View.GONE : View.VISIBLE}"
             android:text="@string/share_photo"
+            android:visibility="@{photoViewModel.isSaveModeEnable ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

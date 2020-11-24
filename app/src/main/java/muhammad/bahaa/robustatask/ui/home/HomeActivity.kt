@@ -32,56 +32,21 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>(), PhotoCl
         viewModel.onViewResume()
     }
 
-    private fun initializeAdapter(images: List<String>) {
-        val recyclerView = viewDataBinding.recyclerViewHistory
-        recyclerView.adapter = HomeAdapter(images.toMutableList(), this)
-        recyclerView.layoutManager =
-                GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
-    }
-
-    private fun initializeDataBindingVariables() {
-        viewDataBinding.homeViewModel = viewModel
-        viewDataBinding.lifecycleOwner = this
-    }
-
-    private fun setObservers() {
-
-        val openCameraObserver = Observer<Unit> {
-            imageFile = fileToStoreCameraImg
-            openCamera(imageFile, REQUEST_CAMERA)
-        }
-
-        val photosListObserver = Observer<List<String>> {
-            initializeAdapter(it)
-        }
-
-        viewModel.takePhotoEvent.observe(this, openCameraObserver)
-        viewModel.photosList.observe(this, photosListObserver)
-    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
             val intent = Intent(this, PhotoActivity::class.java)
             intent.putExtra(INTENT_KEY_IMAGE_URI, Uri.fromFile(imageFile))
             intent.putExtra(INTENT_KEY_SAVE_MODE, true)
             startActivity(intent)
         }
-
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_CAMERA -> {
                 if (grantResults.isNotEmpty() || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     this.openCamera(fileToStoreCameraImg)
-
                 }
             }
         }
@@ -93,4 +58,28 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>(), PhotoCl
         startActivity(intent)
     }
 
+    private fun initializeAdapter(images: List<String>) {
+        val recyclerView = viewDataBinding.recyclerViewHistory
+        recyclerView.adapter = HomeAdapter(images.toMutableList(), this)
+        recyclerView.layoutManager =
+                GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+    }
+
+    private fun setObservers() {
+        val openCameraObserver = Observer<Unit> {
+            imageFile = fileToStoreCameraImg
+            openCamera(imageFile, REQUEST_CAMERA)
+        }
+        val photosListObserver = Observer<List<String>> {
+            initializeAdapter(it)
+        }
+
+        viewModel.takePhotoEvent.observe(this, openCameraObserver)
+        viewModel.photosList.observe(this, photosListObserver)
+    }
+
+    private fun initializeDataBindingVariables() {
+        viewDataBinding.homeViewModel = viewModel
+        viewDataBinding.lifecycleOwner = this
+    }
 }

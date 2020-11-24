@@ -16,15 +16,15 @@ object BitmapUtils {
     fun saveImageUri(image: Bitmap?, context: Context): Uri? {
         if (android.os.Build.VERSION.SDK_INT >= 29) {
             val values =
-                contentValues()
+                    contentValues()
             values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/RobustaWeather")
             values.put(MediaStore.Images.Media.IS_PENDING, true)
             val uri =
-                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                    context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
             uri?.takeIf { image != null }?.apply {
                 saveImageToStream(
-                    image!!,
-                    context.contentResolver.openOutputStream(uri)
+                        image!!,
+                        context.contentResolver.openOutputStream(uri)
                 )
                 values.put(MediaStore.Images.Media.IS_PENDING, false)
                 context.contentResolver.update(uri, values, null, null)
@@ -32,17 +32,17 @@ object BitmapUtils {
             return uri
         } else {
             val rootFilePath =
-                Environment.getExternalStorageDirectory().absolutePath.toString() +
-                        "/Pictures/RobustaWeather"
+                    Environment.getExternalStorageDirectory().absolutePath.toString() +
+                            "/Pictures/RobustaWeather"
             val rootDir = File(rootFilePath)
             if (!rootDir.exists()) rootDir.mkdirs()
             val file = File(rootDir,
-                fileSuffix()
+                    fileSuffix()
             )
             val fOut = FileOutputStream(file)
             saveImageToStream(
-                image,
-                fOut
+                    image,
+                    fOut
             )
             return Uri.fromFile(file)
         }

@@ -1,6 +1,7 @@
 package muhammad.bahaa.robustatask.ui.photo_preview
 
 import android.content.Intent
+import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import muhammad.bahaa.robustatask.data.api.ApiBuilder
@@ -24,9 +25,12 @@ class PhotoViewModel : BaseViewModel() {
     val sharePhotoEvent: LiveData<Unit>
         get() = _sharePhotoEvent
 
+    fun onLocationFetched(lat: String, lon: String) {
+        getWeatherData(lat, lon)
+    }
 
-    fun onIntentReceived(intent: Intent){
-        isSaveModeEnable.set(intent.getBooleanExtra(INTENT_KEY_SAVE_MODE,false))
+    fun onIntentReceived(intent: Intent) {
+        isSaveModeEnable.set(intent.getBooleanExtra(INTENT_KEY_SAVE_MODE, false))
         _saveModeEvent.call()
     }
 
@@ -38,16 +42,16 @@ class PhotoViewModel : BaseViewModel() {
         _sharePhotoEvent.call()
     }
 
-    fun getWeatherData(lat: String, lon: String) {
+    fun onStoragePermissionGranted(uri: Uri?) {
+        uri?.let { PreferenceManager.addPhoto(uri.toString()) }
+        _terminate.call()
+    }
+
+    private fun getWeatherData(lat: String, lon: String) {
         makeApiRequest(ApiBuilder.weatherServices.getCurrentLocationWeatherData(lat.toDouble(), lon.toDouble()), {
             weatherResponse.set(it)
         }, {
 
         })
     }
-
-    fun saveImageToStorage(uri: String){
-        PreferenceManager.addPhoto(uri)
-    }
-
 }

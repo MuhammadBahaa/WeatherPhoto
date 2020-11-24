@@ -8,13 +8,8 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import muhammad.bahaa.robustatask.R
 
-
 class HomeAdapter(val photoList: MutableList<String>, val callback: PhotoClickCallback) :
         RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
-
-    override fun getItemCount(): Int {
-        return photoList.size
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_photo, parent, false)
@@ -23,6 +18,10 @@ class HomeAdapter(val photoList: MutableList<String>, val callback: PhotoClickCa
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.onBind(position)
+    }
+
+    override fun getItemCount(): Int {
+        return photoList.size
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

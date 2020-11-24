@@ -11,9 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import muhammad.bahaa.robustatask.data.models.NetworkError
 import muhammad.bahaa.robustatask.utils.APP_NETWORK_ERROR
 import muhammad.bahaa.robustatask.utils.NO_INTERNET_CONNECTION_MESSAGE
-
 import muhammad.bahaa.robustatask.utils.SingleLiveEvent
-import okhttp3.ResponseBody
 import retrofit2.Response
 
 abstract class BaseViewModel : ViewModel(), ApiInterface {
@@ -51,42 +49,42 @@ abstract class BaseViewModel : ViewModel(), ApiInterface {
     fun onClickBack() = _terminate.call()
 
     override fun <R> makeApiRequest(
-        networkCall: Single<Response<R>>?,
-        onSuccess: (R?) -> Unit,
-        onFailure: (NetworkError) -> Unit
+            networkCall: Single<Response<R>>?,
+            onSuccess: (R?) -> Unit,
+            onFailure: (NetworkError) -> Unit
     ) {
         makeNetworkRequest(networkCall, onSuccess, onFailure)
     }
 
     private fun <R> makeNetworkRequest(
-        networkCall: Single<Response<R>>?,
-        onSuccess: (R?) -> Unit,
-        onFailure: (NetworkError) -> Unit
+            networkCall: Single<Response<R>>?,
+            onSuccess: (R?) -> Unit,
+            onFailure: (NetworkError) -> Unit
     ) {
         doPreApiRequest()
 
         var disposable: Disposable? = null
         if (networkCall != null) {
             disposable = networkCall
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally {
-                    disposable?.let {
-                        it.dispose()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doFinally {
+                        disposable?.let {
+                            it.dispose()
+                        }
                     }
-                }
-                .subscribe { response: Response<R>?, throwable: Throwable? ->
-                    throwable?.let {
-                        doOnApiFailure()
-                        onFailure(NO_INTERNET_NETWORK_ERROR)
-                        return@subscribe
-                    } ?: doOnApiSuccess(response)
+                    .subscribe { response: Response<R>?, throwable: Throwable? ->
+                        throwable?.let {
+                            doOnApiFailure()
+                            onFailure(NO_INTERNET_NETWORK_ERROR)
+                            return@subscribe
+                        } ?: doOnApiSuccess(response)
 
-                    response?.takeIf { it.isSuccessful }?.let {
-                        onSuccess(it.body())
+                        response?.takeIf { it.isSuccessful }?.let {
+                            onSuccess(it.body())
+                        }
+                                ?: onFailure(DEFAULT_NETWORK_ERROR)
                     }
-                    ?: onFailure(DEFAULT_NETWORK_ERROR)
-                }
         }
         if (disposable != null) {
             compositeDisposable.add(disposable)

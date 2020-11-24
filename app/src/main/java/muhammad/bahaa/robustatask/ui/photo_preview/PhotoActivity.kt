@@ -29,14 +29,18 @@ class PhotoActivity : BaseActivity<PhotoViewModel, ActivitySavePhotoBinding>(), 
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun attachViewModelToView() {
+        setObservers()
         initializeDataBindingVariables()
         displayCapturedImage()
-        setObservers()
         viewModel.onIntentReceived(intent)
     }
 
+    override fun onLocationFetched(lat: String, lon: String) {
+        viewModel.onLocationFetched(lat, lon)
+    }
+
     private fun initializeDataBindingVariables() {
-        viewDataBinding.savePhotoViewModel = viewModel
+        viewDataBinding.photoViewModel = viewModel
         viewDataBinding.lifecycleOwner = this
     }
 
@@ -45,11 +49,9 @@ class PhotoActivity : BaseActivity<PhotoViewModel, ActivitySavePhotoBinding>(), 
         val savePhotoObserver = Observer<Unit> {
             checkStorageRequestPermissionState()
         }
-
         val sharePhotoObserver = Observer<Unit> {
             shareImage()
         }
-
         val saveModeObserver = Observer<Unit> {
             checkLocationRequestPermissionState(this)
         }
@@ -65,15 +67,8 @@ class PhotoActivity : BaseActivity<PhotoViewModel, ActivitySavePhotoBinding>(), 
         }
     }
 
-    private fun saveImageToStorage() {
-        val savedImageUri =
-            BitmapUtils.saveImageUri(convertToBitmap(viewDataBinding.container), this)
-        viewModel.saveImageToStorage(savedImageUri.toString())
-        finish()
-    }
-
     @RequiresApi(Build.VERSION_CODES.M)
-    fun checkStorageRequestPermissionState() {
+    private fun checkStorageRequestPermissionState() {
         when (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -82,7 +77,7 @@ class PhotoActivity : BaseActivity<PhotoViewModel, ActivitySavePhotoBinding>(), 
                 requestStoragePermission()
             }
             PackageManager.PERMISSION_GRANTED -> {
-                saveImageToStorage()
+                viewModel.onStoragePermissionGranted(getImageUriFromView())
             }
         }
     }
@@ -95,17 +90,6 @@ class PhotoActivity : BaseActivity<PhotoViewModel, ActivitySavePhotoBinding>(), 
         )
     }
 
-    override fun onLocationFetched(lat: String, lon: String) {
-        viewModel.getWeatherData(lat, lon)
-    }
-
-    private fun convertToBitmap(layout: View): Bitmap? {
-        var map: Bitmap?
-        layout.isDrawingCacheEnabled = true
-        layout.buildDrawingCache()
-        return layout.drawingCache.also { map = it }
-    }
-
     private fun shareImage() {
         val file = File(intent.getParcelableExtra<Uri>(INTENT_KEY_IMAGE_URI)?.path)
         val imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file)
@@ -115,5 +99,16 @@ class PhotoActivity : BaseActivity<PhotoViewModel, ActivitySavePhotoBinding>(), 
         shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri)
         shareIntent.type = "image/*"
         startActivity(Intent.createChooser(shareIntent, "Share Image Via.."))
+    }
+
+    private fun getImageUriFromView(): Uri? {
+        return BitmapUtils.saveImageUri(convertToBitmap(viewDataBinding.container), this)
+    }
+
+    private fun convertToBitmap(layout: View): Bitmap? {
+        var map: Bitmap?
+        layout.isDrawingCacheEnabled = true
+        layout.buildDrawingCache()
+        return layout.drawingCache.also { map = it }
     }
 }

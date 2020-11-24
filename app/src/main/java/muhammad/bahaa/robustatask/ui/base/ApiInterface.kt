@@ -15,8 +15,8 @@ interface ApiInterface {
     fun doOnApiFailure() {}
     fun onNetworkConnection() {}
     fun <R> makeApiRequest(
-        networkCall: Single<Response<R>>?,
-        onSuccess: (R?) -> Unit = {},
-        onFailure: (NetworkError) -> Unit = {}
+            networkCall: Single<Response<R>>?,
+            onSuccess: (R?) -> Unit = {},
+            onFailure: (NetworkError) -> Unit = {}
     )
 }

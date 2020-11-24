@@ -24,11 +24,11 @@ fun Activity.checkLocationRequestPermissionState(listener: LocationListener) {
 
 
 @SuppressLint("MissingPermission")
-fun Activity.getCurrentLocation(listener: LocationListener){
+fun Activity.getCurrentLocation(listener: LocationListener) {
 
-   var fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+    var fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     fusedLocationClient.lastLocation
-        .addOnSuccessListener {
-            listener.onLocationFetched(it.latitude.toString(), it.longitude.toString())
-        }
+            .addOnSuccessListener {
+                listener.onLocationFetched(it.latitude.toString(), it.longitude.toString())
+            }
 }

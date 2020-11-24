@@ -1,15 +1,10 @@
 package muhammad.bahaa.robustatask.ui.home
 
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Single
-import muhammad.bahaa.robustatask.data.models.NetworkError
-import muhammad.bahaa.robustatask.data.models.WeatherResponse
 import muhammad.bahaa.robustatask.data.preference.PreferenceManager
 import muhammad.bahaa.robustatask.ui.base.BaseViewModel
 import muhammad.bahaa.robustatask.utils.SingleLiveEvent
-import retrofit2.Response
 
 class HomeViewModel : BaseViewModel() {
 
@@ -25,7 +20,7 @@ class HomeViewModel : BaseViewModel() {
         getPhotosHistory()
     }
 
-    fun onViewResume(){
+    fun onViewResume() {
         getPhotosHistory()
     }
 
@@ -33,7 +28,7 @@ class HomeViewModel : BaseViewModel() {
         _takePhotoEvent.call()
     }
 
-   private fun getPhotosHistory() {
+    private fun getPhotosHistory() {
         val list: ArrayList<String>? = PreferenceManager.getPhotosList()
         list?.let {
             if (list.isNotEmpty()) _photosList.value = list

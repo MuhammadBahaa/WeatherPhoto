@@ -19,18 +19,18 @@ import java.util.*
 fun Activity.openCamera(file: File, reqCode: Int? = null) {
     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
         putExtra(
-            MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
+                MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
                 this@openCamera,
                 BuildConfig.APPLICATION_ID + ".provider",
                 file
-            )
+        )
         )
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             val photoUri = FileProvider.getUriForFile(
-                this@openCamera,
-                BuildConfig.APPLICATION_ID + ".provider",
-                file
+                    this@openCamera,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file
             )
 
             clipData = ClipData.newRawUri("", photoUri)
@@ -41,14 +41,14 @@ fun Activity.openCamera(file: File, reqCode: Int? = null) {
     if (isCameraPermissionGranted() && intent.resolveActivity(packageManager) != null) {
 
         if (packageManager != null && intent.resolveActivity(packageManager) != null) startActivityForResult(
-            intent,
-            REQUEST_CAMERA
+                intent,
+                REQUEST_CAMERA
         )
     } else if (!isCameraPermissionGranted() && reqCode != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
-                arrayOf(Manifest.permission.CAMERA),
-                reqCode
+                    arrayOf(Manifest.permission.CAMERA),
+                    reqCode
             )
         }
     }
@@ -56,15 +56,7 @@ fun Activity.openCamera(file: File, reqCode: Int? = null) {
 
 private fun Activity.isCameraPermissionGranted(): Boolean {
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-        != PackageManager.PERMISSION_GRANTED
-    )
-        return false
-    return true
-}
-
-private fun Activity.isReadExternalStoragePermissionGranted(): Boolean {
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED
+            != PackageManager.PERMISSION_GRANTED
     )
         return false
     return true
@@ -72,15 +64,16 @@ private fun Activity.isReadExternalStoragePermissionGranted(): Boolean {
 
 val Context.fileToStoreCameraImg: File
     get() = with(
-        "IMG_${
-            SimpleDateFormat(
-            IMG_FILE_DATE_FORMAT,
-            Locale.getDefault()
-        ).format(Date())}"
+            "IMG_${
+                SimpleDateFormat(
+                        IMG_FILE_DATE_FORMAT,
+                        Locale.getDefault()
+                ).format(Date())
+            }"
     ) {
         File.createTempFile(
-            this,
-            IMG_FILE_EXT,
-            getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                this,
+                IMG_FILE_EXT,
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         )
     }
