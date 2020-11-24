@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RobustaTask">
-        <activity android:name=".ui.save_photo.SavePhotoActivity"></activity>
+        <activity android:name=".ui.photo_preview.PhotoActivity"></activity>
         <activity android:name=".ui.home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

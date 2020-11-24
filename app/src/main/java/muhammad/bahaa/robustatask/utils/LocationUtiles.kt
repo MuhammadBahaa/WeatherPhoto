@@ -8,7 +8,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
-import muhammad.bahaa.robustatask.ui.save_photo.LocationListener
+import muhammad.bahaa.robustatask.ui.photo_preview.LocationListener
 
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.checkLocationRequestPermissionState(listener: LocationListener) {

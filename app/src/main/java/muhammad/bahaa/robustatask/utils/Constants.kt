@@ -7,6 +7,7 @@ const val APP_NETWORK_ERROR = 1000
 const val HTTP_REQUEST_TIMEOUT = 30
 
 const val INTENT_KEY_IMAGE_URI = "photo_uri"
+const val INTENT_KEY_SAVE_MODE = "save_mode"
 
 const val PREF_KEY_PHOTO_LIST = "PREF_KEY_PHOTO_LIST"
 

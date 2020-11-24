@@ -7,15 +7,14 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import muhammad.bahaa.robustatask.R
 import muhammad.bahaa.robustatask.databinding.ActivityHomeBinding
 import muhammad.bahaa.robustatask.ui.base.BaseActivity
-import muhammad.bahaa.robustatask.ui.save_photo.SavePhotoActivity
+import muhammad.bahaa.robustatask.ui.photo_preview.PhotoActivity
 import muhammad.bahaa.robustatask.utils.*
 import java.io.File
 
-class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
+class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>(), PhotoClickCallback {
 
     override val rootView: Int
         get() = R.layout.activity_home
@@ -33,11 +32,11 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         viewModel.onViewResume()
     }
 
-    private fun initializeAdapter(images: List<String>){
+    private fun initializeAdapter(images: List<String>) {
         val recyclerView = viewDataBinding.recyclerViewHistory
-        recyclerView.adapter = HomeAdapter(images.toMutableList())
+        recyclerView.adapter = HomeAdapter(images.toMutableList(), this)
         recyclerView.layoutManager =
-          GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+                GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
     }
 
     private fun initializeDataBindingVariables() {
@@ -65,17 +64,18 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-            val intent = Intent(this, SavePhotoActivity::class.java)
+            val intent = Intent(this, PhotoActivity::class.java)
             intent.putExtra(INTENT_KEY_IMAGE_URI, Uri.fromFile(imageFile))
+            intent.putExtra(INTENT_KEY_SAVE_MODE, true)
             startActivity(intent)
         }
 
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         when (requestCode) {
             REQUEST_CAMERA -> {
@@ -85,6 +85,12 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
                 }
             }
         }
+    }
+
+    override fun onImageClicked(imageUri: Uri) {
+        val intent = Intent(this, PhotoActivity::class.java)
+        intent.putExtra(INTENT_KEY_IMAGE_URI, imageUri)
+        startActivity(intent)
     }
 
 }

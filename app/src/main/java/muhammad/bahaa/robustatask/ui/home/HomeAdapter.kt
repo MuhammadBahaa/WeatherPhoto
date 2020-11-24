@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import muhammad.bahaa.robustatask.R
 
 
-class HomeAdapter(var photoList: MutableList<String>) :
-    RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(val photoList: MutableList<String>, val callback: PhotoClickCallback) :
+        RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return photoList.size
@@ -30,9 +30,8 @@ class HomeAdapter(var photoList: MutableList<String>) :
             val imageView = findViewById<ImageView>(R.id.image_view)
             imageView.setImageURI(photoList[position].toUri())
             imageView.setOnClickListener {
+                callback.onImageClicked(photoList[position].toUri())
             }
         }
     }
-
-
 }
